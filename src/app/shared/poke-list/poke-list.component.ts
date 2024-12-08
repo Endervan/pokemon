@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {PokeApiService} from "../../service/poke-api.service";
+import {debounceTime, Subject} from "rxjs";
 
 @Component({
   selector: 'poke-list',
@@ -9,6 +10,8 @@ import {PokeApiService} from "../../service/poke-api.service";
 export class PokeListComponent implements OnInit {
   private setAllPokemons: any; // lista original
   public getAllPokemons: any; // lista filtrada
+  private searchSubject: Subject<string> = new Subject();
+
 
   constructor(private pokeApiService: PokeApiService) {
   }
@@ -18,7 +21,19 @@ export class PokeListComponent implements OnInit {
       this.setAllPokemons = res.results;
       this.getAllPokemons = this.setAllPokemons;
     })
+
+    this.searchSubject.pipe(
+      debounceTime(1000) // espera 300ms após o último evento
+    ).subscribe(searchText => {
+      this.getSearch(searchText);
+    });
   }
+
+  onSearchChange(value: string) {
+    this.searchSubject.next(value);
+  }
+
+
 
   getSearch(value: string) {
     this.getAllPokemons = this.setAllPokemons.filter((res: any) => {

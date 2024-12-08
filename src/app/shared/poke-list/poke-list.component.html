@@ -1,4 +1,4 @@
-<poke-search (emitSearch)="getSearch($event)"></poke-search>
+<poke-search (emitSearch)="onSearchChange($event)"></poke-search>
 <section class="listagem">
 
   <ng-template [ngFor] let-pokemon [ngForOf]="getAllPokemons">
