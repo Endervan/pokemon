@@ -11,19 +11,22 @@ export class PokeListComponent implements OnInit {
   private setAllPokemons: any; // lista original
   public getAllPokemons: any; // lista filtrada
   private searchSubject: Subject<string> = new Subject();
+  isLoading = false;
 
 
   constructor(private pokeApiService: PokeApiService) {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.pokeApiService.apiListAllPokemons.subscribe(res => {
       this.setAllPokemons = res.results;
       this.getAllPokemons = this.setAllPokemons;
+      this.isLoading = false;
     })
 
     this.searchSubject.pipe(
-      debounceTime(1000) // espera 300ms após o último evento
+      debounceTime(1000)
     ).subscribe(searchText => {
       this.getSearch(searchText);
     });

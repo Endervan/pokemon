@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {map, Observable} from "rxjs";
+import {debounceTime, map, Observable} from "rxjs";
 import {tap} from "rxjs/operators";
 
 @Injectable({
@@ -16,6 +16,7 @@ export class PokeApiService {
 
   get apiListAllPokemons(): Observable<any> {
     return this.http.get<any>(this.url).pipe(
+      debounceTime(1000),
       tap(res => res),
       tap(res => {
         res.results.map((resPokemons: any) => {
